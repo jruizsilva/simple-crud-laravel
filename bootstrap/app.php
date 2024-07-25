@@ -4,6 +4,7 @@ use App\Http\Middleware\ForceJsonResponseMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -17,7 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (NotFoundHttpException $exception) {
-            return errorResponse(status: 404, message: $exception->getMessage());
+        // $exceptions->render(function (NotFoundHttpException $exception) {
+        //     return errorResponse(status: 404, message: $exception->getMessage());
+        // });
+        $exceptions->render(function (HttpExceptionInterface $exception) {
+            return errorResponse($exception->getStatusCode(), $exception->getMessage());
         });
     })->create();
