@@ -23,7 +23,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:4',
         ]);
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
