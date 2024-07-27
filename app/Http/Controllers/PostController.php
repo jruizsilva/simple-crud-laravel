@@ -11,9 +11,10 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $userId = $request->get("userId");
-        $posts = Post::with("user")->when($userId, function (Builder $builder) use ($userId) {
-            $builder->where("user_id", "=", $userId);
-        })->latest()->get();
+        $posts = Post::with("user")
+            ->when($userId, function (Builder $builder) use ($userId) {
+                $builder->where("user_id", "=", $userId);
+            })->latest()->get();
         return response()->json($posts);
     }
     public function store(Request $request)

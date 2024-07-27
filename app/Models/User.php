@@ -45,6 +45,10 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+    private function searchableFields()
+    {
+        return ["name", "email"];
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();

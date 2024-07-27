@@ -10,9 +10,18 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = User::all();
+        $page = $request->get("page");
+        $search = $request->get("search");
+
+        $postsQuery = User::search($search)->latest();
+
+        if ($page) {
+            $posts = $postsQuery->paginate(7);
+        } else {
+            $posts = $postsQuery->get();
+        }
         return response()->json($posts);
     }
 
