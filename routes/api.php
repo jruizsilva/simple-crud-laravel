@@ -10,7 +10,6 @@ use App\Http\Middleware\AuthMiddleware;
 Route::middleware(GuestMiddleware::class)->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(AuthMiddleware::class)->group(function () {
     Route::get('me', [AuthController::class, 'me'])->name('me');
 });

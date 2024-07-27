@@ -9,7 +9,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with("user")->latest()->get();
         return response()->json($posts);
     }
     public function store(Request $request)
@@ -18,8 +18,9 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
-        $post = Post::create($data);
-        return response()->json($post, 201);
+        $user = auth()->user();
+        $post = $user->posts()->create($data);
+        return response()->json($post->fresh("user"), 201);
     }
     public function show(Post $post)
     {
@@ -28,8 +29,8 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         $data = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'content' => 'sometimes|required|string',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
         ]);
         $post->update($data);
         return response()->json($post);
@@ -37,6 +38,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return response()->json(null, 204);
+        return response()->json();
     }
 }

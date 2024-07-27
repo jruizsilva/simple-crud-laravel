@@ -10,7 +10,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|min:4'
         ]);
         $token = auth()->attempt($credentials);
 
@@ -23,6 +23,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
+            'user' => auth()->user(),
             'expire_in' => auth()->factory()->getTTL() * 60
         ]);
     }
@@ -30,11 +31,5 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(auth()->user());
-    }
-
-    public function logout()
-    {
-        auth()->logout();
-        return response()->json();
     }
 }

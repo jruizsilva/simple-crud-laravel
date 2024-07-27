@@ -12,7 +12,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $posts = User::all();
+        return response()->json($posts);
     }
 
     /**
@@ -21,7 +22,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
+            'name' => 'required|min:4',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:4',
         ]);
