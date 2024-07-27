@@ -15,14 +15,14 @@ class UserController extends Controller
         $page = $request->get("page");
         $search = $request->get("search");
 
-        $postsQuery = User::search($search)->latest();
+        $usersQuery = User::search($search)->latest();
 
         if ($page) {
-            $posts = $postsQuery->paginate(7);
+            $users = $usersQuery->paginate(7);
         } else {
-            $posts = $postsQuery->get();
+            $users = $usersQuery->get();
         }
-        return response()->json($posts);
+        return response()->json($users);
     }
 
     /**
