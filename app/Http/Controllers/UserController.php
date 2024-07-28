@@ -101,6 +101,6 @@ class UserController extends Controller
             Storage::disk('public')->delete($user->image);
             $user->update(['image' => null]);
         }
-        return response()->json($user);
+        return response()->json($user->fresh());
     }
 }
