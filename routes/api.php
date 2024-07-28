@@ -12,6 +12,8 @@ Route::middleware(GuestMiddleware::class)->group(function () {
 });
 Route::middleware(AuthMiddleware::class)->group(function () {
     Route::get('me', [AuthController::class, 'me'])->name('me');
+    Route::post('me/uploadImage', [UserController::class, 'uploadImage'])->name('me.uploadImage');
+    Route::delete('me/destroyImage', [UserController::class, 'destroyImage'])->name('me.destroyImage');
 });
 
 Route::apiResource('users', UserController::class);

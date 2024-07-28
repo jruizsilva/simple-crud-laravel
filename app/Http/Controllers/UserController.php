@@ -64,16 +64,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name' => 'sometimes|min:4',
-            'image' => 'sometimes|image|max:2048',
+            'name' => 'required|min:4',
         ]);
-        if ($request->hasFile('image')) {
-            if ($user->image) {
-                Storage::disk('public')->delete($user->image);
-            }
-            $path = $request->file('image')->store('users/avatars', 'public');
-            $data['image'] = $path;
-        }
         $user->update($data);
         return response()->json($user);
     }
@@ -84,5 +76,29 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:2048',
+        ]);
+        $user = auth()->user();
+        if ($user->image) {
+            Storage::disk('public')->delete($user->image);
+        }
+        $path = $request->file('image')->store('/users', 'public');
+        $user->update(['image' => $path]);
+        return response()->json($user);
+    }
+
+    public function destroyImage()
+    {
+        $user = auth()->user();
+        if ($user->image) {
+            Storage::disk('public')->delete($user->image);
+            $user->update(['image' => null]);
+        }
+        return response()->json($user);
     }
 }
