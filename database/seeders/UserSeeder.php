@@ -18,6 +18,6 @@ class UserSeeder extends Seeder
             'email' => 'test@gmail.com',
             'password' => 'test',
         ]);
-        User::factory(3)->create();
+        User::factory(10)->create();
     }
 }

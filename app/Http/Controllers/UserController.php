@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,11 +15,19 @@ class UserController extends Controller
     {
         $page = $request->get("page");
         $search = $request->get("search");
+        $withPosts = $request->get("withPosts");
 
-        $usersQuery = User::search($search)->latest();
+        $usersQuery = User::with("posts")
+            ->when($withPosts === "true", function (Builder $builder) {
+                $builder->has("posts");
+            })
+            ->when($withPosts === "false", function (Builder $builder) {
+                $builder->doesntHave("posts");
+            })
+            ->search($search)->latest();
 
         if ($page) {
-            $users = $usersQuery->paginate(7);
+            $users = $usersQuery->paginate(4);
         } else {
             $users = $usersQuery->get();
         }
