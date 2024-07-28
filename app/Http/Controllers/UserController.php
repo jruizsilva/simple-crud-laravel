@@ -64,8 +64,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name' => 'required|min:4',
-            'image' => 'nullable|image|max:2048',
+            'name' => 'sometimes|min:4',
+            'image' => 'sometimes|image|max:2048',
         ]);
         if ($request->hasFile('image')) {
             if ($user->image) {
