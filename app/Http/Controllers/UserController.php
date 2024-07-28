@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Storage;
 
 class UserController extends Controller
 {
@@ -64,7 +65,15 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|min:4',
+            'image' => 'nullable|image|max:2048',
         ]);
+        if ($request->hasFile('image')) {
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            $path = $request->file('image')->store('users/avatars', 'public');
+            $data['image'] = $path;
+        }
         $user->update($data);
         return response()->json($user);
     }
