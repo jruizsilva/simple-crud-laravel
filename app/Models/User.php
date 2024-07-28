@@ -53,7 +53,7 @@ class User extends Authenticatable implements JWTSubject
     public function image(): Attribute
     {
         return new Attribute(function ($value) {
-            return $value ? Storage::url($value) : null;
+            return $value ? env("APP_URL") . Storage::url($value) : null;
         });
     }
 
