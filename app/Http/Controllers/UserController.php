@@ -80,16 +80,18 @@ class UserController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|max:2048',
-        ]);
         $user = auth()->user();
-        if ($user->image) {
-            Storage::disk('public')->delete($user->image);
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'required|image|max:2048',
+            ]);
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            $path = $request->file('image')->store('/users', 'public');
+            $user->update(['image' => $path]);
         }
-        $path = $request->file('image')->store('/users', 'public');
-        $user->update(['image' => $path]);
-        return response()->json($user);
+        return response()->json($user->fresh());
     }
 
     public function destroyImage()
